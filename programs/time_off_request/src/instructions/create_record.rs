@@ -30,6 +30,7 @@ pub fn create_record(
     record.employee_pub_key = _ctx.accounts.signer.key();
     record.employee_id = _employee_id;
     record.status = Status::pending;
+    record.bump_seed = _ctx.bumps.record_account;
 
     Ok(())
 }

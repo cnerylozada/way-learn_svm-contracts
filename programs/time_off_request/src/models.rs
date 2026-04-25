@@ -19,4 +19,6 @@ pub struct TransferRecord {
     pub time_off_request_id: String,
 
     pub status: Status,
+
+    pub bump_seed: u8,
 }
