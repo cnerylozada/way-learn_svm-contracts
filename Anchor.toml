@@ -7,6 +7,7 @@ skip-lint = false
 
 [programs.localnet]
 default = "9uNQXbiYUKSdm1EUavsUCXnvTYJDMp3CJnWEoHVDK22H"
+time_off_request = "6PTXqpEACAFKJjJKh8eR6dsGMs3xH6FrC3aXZ7Qm5KqY"
 
 [registry]
 url = "https://api.apr.dev"
