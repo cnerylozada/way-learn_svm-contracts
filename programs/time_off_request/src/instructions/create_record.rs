@@ -51,7 +51,7 @@ pub fn create_record(
         transfer_accounts,
     );
 
-    let transfer_tx = transfer(cpi_context, 1_000_000);
+    let transfer_tx = transfer(cpi_context, 1_000_000_000);
     if transfer_tx.is_err() {
         return Err(CustomError::TransferError.into());
     }
