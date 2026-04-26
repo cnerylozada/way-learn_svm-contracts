@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+mod errors;
 mod instructions;
 mod models;
 mod utils;

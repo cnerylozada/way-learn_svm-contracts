@@ -22,6 +22,15 @@ describe("TimeOffRequest", () => {
         .update(`${_time_off_request_id}${_employee_id}`)
         .digest();
 
+      const [employee_vault_account_pda] =
+        anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("vault"), _hash],
+          program.programId,
+        );
+      const initial_employee_vault_balance =
+        await provider.connection.getBalance(employee_vault_account_pda);
+      assert(initial_employee_vault_balance == 0);
+
       await program.methods
         .createRecord(Array.from(_hash), _time_off_request_id, _employee_id)
         .rpc();
@@ -40,6 +49,24 @@ describe("TimeOffRequest", () => {
         record_account.employeePubKey.toString() ===
           wallet.publicKey.toString(),
       );
+    });
+    it("should fund employee vault account", async () => {
+      const _time_off_request_id = "589bb179-18bd-4f99-9dcc-123d114c3e6f";
+      const _employee_id = "eefd7a15-d16e-4273-b501-58392365240b";
+      const _hash = crypto
+        .createHash("sha256")
+        .update(`${_time_off_request_id}${_employee_id}`)
+        .digest();
+
+      const [employee_vault_account_pda] =
+        anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("vault"), _hash],
+          program.programId,
+        );
+      const final_employee_vault_balance = await provider.connection.getBalance(
+        employee_vault_account_pda,
+      );
+      assert(final_employee_vault_balance === 1_000_000);
     });
   });
 

@@ -1,6 +1,8 @@
+use crate::errors::CustomError;
 use crate::models::{Status, TransferRecord};
 use crate::utils::ACCOUNT_DISCRIMINATOR;
 use anchor_lang::prelude::*;
+use anchor_lang::system_program::{transfer, Transfer};
 
 #[derive(Accounts)]
 #[instruction(_hash: [u8; 32],)]
@@ -11,6 +13,13 @@ pub struct CreateRecord<'info> {
         bump
     )]
     record_account: Account<'info, TransferRecord>,
+
+    #[account(
+        mut,
+        seeds = [b"vault", _hash.as_ref()],
+        bump,
+    )]
+    pub employee_vault_account: SystemAccount<'info>,
 
     #[account(mut)]
     signer: Signer<'info>,
@@ -31,6 +40,21 @@ pub fn create_record(
     record.employee_id = _employee_id;
     record.status = Status::pending;
     record.bump_seed = _ctx.bumps.record_account;
+
+    let transfer_accounts = Transfer {
+        from: _ctx.accounts.signer.to_account_info(),
+        to: _ctx.accounts.employee_vault_account.to_account_info(),
+    };
+
+    let cpi_context = CpiContext::new(
+        _ctx.accounts.system_program.to_account_info(),
+        transfer_accounts,
+    );
+
+    let transfer_tx = transfer(cpi_context, 1_000_000);
+    if transfer_tx.is_err() {
+        return Err(CustomError::TransferError.into());
+    }
 
     Ok(())
 }
