@@ -1,15 +1,32 @@
-use crate::models::{Status, TransferRecord};
+use crate::{
+    models::{Status, TimeOffRecord},
+    utils::{COMPANY_VAULT_TAG, EMPLOYEE_VAULT_TAG, TIME_OFF_RECORD_TAG},
+};
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 #[instruction(_hash: [u8; 32])]
 pub struct UpdateRecord<'info> {
     #[account(
-        seeds = [b"transfer_record", _hash.as_ref()],
+        seeds = [TIME_OFF_RECORD_TAG, _hash.as_ref()],
         bump = record_account.bump_seed,
         mut,
     )]
-    record_account: Account<'info, TransferRecord>,
+    record_account: Account<'info, TimeOffRecord>,
+
+    #[account(
+        mut,
+        seeds = [EMPLOYEE_VAULT_TAG, _hash.as_ref()],
+        bump,
+    )]
+    pub employee_vault_account: SystemAccount<'info>,
+
+    #[account(
+        mut,
+        seeds = [COMPANY_VAULT_TAG],
+        bump,
+    )]
+    pub company_vault_account: SystemAccount<'info>,
 
     #[account(mut)]
     signer: Signer<'info>,

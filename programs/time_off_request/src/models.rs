@@ -9,7 +9,7 @@ pub enum Status {
 
 #[account]
 #[derive(InitSpace)]
-pub struct TransferRecord {
+pub struct TimeOffRecord {
     #[max_len(36)]
     pub employee_id: String,
 

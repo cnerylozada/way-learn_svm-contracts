@@ -11,7 +11,8 @@ describe("TimeOffRequest", () => {
   const program = anchor.workspace.TimeOffRequest as Program<TimeOffRequest>;
   const wallet = provider.wallet as anchor.Wallet;
 
-  const TRANSFER_RECORD_TAG = Buffer.from("transfer_record");
+  const TRANSFER_RECORD_TAG = Buffer.from("time_off_record");
+  const EMPLOYEE_VAULT_TAG = Buffer.from("employee_vault");
 
   describe("create_record method", () => {
     it("should create a new account", async () => {
@@ -24,7 +25,7 @@ describe("TimeOffRequest", () => {
 
       const [employee_vault_account_pda] =
         anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("vault"), _hash],
+          [EMPLOYEE_VAULT_TAG, _hash],
           program.programId,
         );
       const initial_employee_vault_balance =
@@ -39,7 +40,7 @@ describe("TimeOffRequest", () => {
         [TRANSFER_RECORD_TAG, _hash],
         program.programId,
       );
-      const record_account = await program.account.transferRecord.fetch(
+      const record_account = await program.account.timeOffRecord.fetch(
         record_account_pda,
       );
 
@@ -60,7 +61,7 @@ describe("TimeOffRequest", () => {
 
       const [employee_vault_account_pda] =
         anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("vault"), _hash],
+          [EMPLOYEE_VAULT_TAG, _hash],
           program.programId,
         );
       const final_employee_vault_balance = await provider.connection.getBalance(
@@ -88,7 +89,7 @@ describe("TimeOffRequest", () => {
         program.programId,
       );
 
-      const record_account = await program.account.transferRecord.fetch(
+      const record_account = await program.account.timeOffRecord.fetch(
         record_account_pda,
       );
 
