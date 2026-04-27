@@ -11,7 +11,7 @@ describe("TimeOffRequest", () => {
   const program = anchor.workspace.TimeOffRequest as Program<TimeOffRequest>;
   const wallet = provider.wallet as anchor.Wallet;
 
-  const TRANSFER_RECORD_TAG = Buffer.from("time_off_record");
+  const TIME_OFF_RECORD_TAG = Buffer.from("time_off_record");
   const EMPLOYEE_VAULT_TAG = Buffer.from("employee_vault");
   const COMPANY_VAULT_TAG = Buffer.from("company_vault");
 
@@ -44,7 +44,7 @@ describe("TimeOffRequest", () => {
         .rpc();
 
       const [record_account_pda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [TRANSFER_RECORD_TAG, _hash],
+        [TIME_OFF_RECORD_TAG, _hash],
         program.programId,
       );
       const record_account = await program.account.timeOffRecord.fetch(
@@ -102,7 +102,7 @@ describe("TimeOffRequest", () => {
         .rpc();
 
       const [record_account_pda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [TRANSFER_RECORD_TAG, _hash],
+        [TIME_OFF_RECORD_TAG, _hash],
         program.programId,
       );
 
@@ -138,6 +138,28 @@ describe("TimeOffRequest", () => {
       const company_vault_account_balance =
         await provider.connection.getBalance(company_vault_account_pda);
       assert(company_vault_account_balance === 1_000_000_000);
+    });
+  });
+
+  describe("delete_record method", () => {
+    it("should delete time_off_record account", async () => {
+      const _time_off_request_id = "589bb179-18bd-4f99-9dcc-123d114c3e6f";
+      const _employee_id = "eefd7a15-d16e-4273-b501-58392365240b";
+      const _hash = crypto
+        .createHash("sha256")
+        .update(`${_time_off_request_id}${_employee_id}`)
+        .digest();
+
+      await program.methods.deleteRecord(Array.from(_hash)).rpc();
+
+      const [record_account_pda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [TIME_OFF_RECORD_TAG, _hash],
+        program.programId,
+      );
+      const record_account = await program.account.timeOffRecord.fetchNullable(
+        record_account_pda,
+      );
+      assert(record_account === null);
     });
   });
 });

@@ -34,4 +34,8 @@ pub mod time_off_request {
     ) -> Result<()> {
         instructions::update_record(_ctx, _hash, _status)
     }
+
+    pub fn delete_record(_ctx: Context<DeleteRecord>, _hash: [u8; 32]) -> Result<()> {
+        instructions::delete_record(_ctx, _hash)
+    }
 }
