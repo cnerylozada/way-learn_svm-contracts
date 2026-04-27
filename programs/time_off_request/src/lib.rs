@@ -14,6 +14,10 @@ pub mod time_off_request {
 
     use super::*;
 
+    pub fn set_admin(_ctx: Context<SetAdmin>) -> Result<()> {
+        instructions::set_admin(_ctx)
+    }
+
     pub fn create_record(
         _ctx: Context<CreateRecord>,
         _hash: [u8; 32],

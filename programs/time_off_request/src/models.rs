@@ -22,3 +22,10 @@ pub struct TimeOffRecord {
 
     pub bump_seed: u8,
 }
+
+#[account]
+#[derive(InitSpace)]
+pub struct AdminAccount {
+    pub user: Pubkey,
+    pub bump_seed: u8,
+}

@@ -1,7 +1,7 @@
 use crate::{
     errors::CustomError,
-    models::{Status, TimeOffRecord},
-    utils::{COMPANY_VAULT_TAG, EMPLOYEE_VAULT_TAG, TIME_OFF_RECORD_TAG},
+    models::{AdminAccount, Status, TimeOffRecord},
+    utils::{ADMIN_TAG, COMPANY_VAULT_TAG, EMPLOYEE_VAULT_TAG, TIME_OFF_RECORD_TAG},
 };
 use anchor_lang::prelude::*;
 use anchor_lang::system_program::{transfer, Transfer};
@@ -9,6 +9,14 @@ use anchor_lang::system_program::{transfer, Transfer};
 #[derive(Accounts)]
 #[instruction(_hash: [u8; 32])]
 pub struct UpdateRecord<'info> {
+    #[account(
+        seeds = [ADMIN_TAG, signer.key().as_ref()],
+        bump = admin_account.bump_seed,
+    )]
+    admin_account: Account<'info, AdminAccount>,
+    #[account(address = admin_account.user)]
+    signer: Signer<'info>,
+
     #[account(
         seeds = [TIME_OFF_RECORD_TAG, _hash.as_ref()],
         bump = record_account.bump_seed,

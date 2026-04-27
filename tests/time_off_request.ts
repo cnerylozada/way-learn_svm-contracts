@@ -15,6 +15,12 @@ describe("TimeOffRequest", () => {
   const EMPLOYEE_VAULT_TAG = Buffer.from("employee_vault");
   const COMPANY_VAULT_TAG = Buffer.from("company_vault");
 
+  describe("set_admin method", () => {
+    it("should ...", async () => {
+      await program.methods.setAdmin().rpc();
+    });
+  });
+
   describe("create_record method", () => {
     it("should create a new account", async () => {
       const _time_off_request_id = "589bb179-18bd-4f99-9dcc-123d114c3e6f";
